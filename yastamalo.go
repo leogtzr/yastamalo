@@ -6,9 +6,7 @@ import (
 )
 
 func main() {
-
 	dbFile := flag.String("db", "", "db file")
 	flag.Parse()
 	fmt.Println(*dbFile)
-
 }
