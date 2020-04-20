@@ -1,10 +1,12 @@
 .DEFAULT_GOAL := install
 
-# INSTALL_SCRIPT=./install.sh
+INSTALL_SCRIPT=./install.sh
 BIN_FILE=yastamalo
 
 install:
 	go build -o "${BIN_FILE}"
+	${INSTALL_SCRIPT}
+	cp ${BIN_FILE} ~/bin
 
 clean:
 	go clean

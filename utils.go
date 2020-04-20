@@ -111,3 +111,13 @@ func (foods foodByExpiricyDays) Less(i, j int) bool {
 	food2 := foods[j]
 	return food1.When.Before(food2.When)
 }
+
+func alreadyExpired(foods *[]Food, date time.Time) []Food {
+	alreadyExpired := make([]Food, 0)
+	for _, food := range *foods {
+		if food.When.Before(date) {
+			alreadyExpired = append(alreadyExpired, food)
+		}
+	}
+	return alreadyExpired
+}

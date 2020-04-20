@@ -11,7 +11,10 @@ import (
 func main() {
 	dbFile := flag.String("db", "", "db file")
 	flag.Parse()
-	fmt.Println(*dbFile)
+
+	if len(*dbFile) == 0 {
+		panic(fmt.Errorf("db file cannot be empty"))
+	}
 
 	file, err := os.Open(*dbFile)
 	if err != nil {
@@ -28,7 +31,18 @@ func main() {
 	filteredFoods := filterFoodsByMinDays(&foods, minDaysToAlertUserForExpiry, today)
 
 	sort.Sort(foodByExpiricyDays(filteredFoods))
+	fmt.Printf("=== Ya van a caducarrrrrr ===\n")
 	for _, food := range filteredFoods {
-		fmt.Println(food)
+		fmt.Printf("\t* %s\n", food)
+	}
+
+	alreadyExpired := alreadyExpired(&foods, today)
+	if len(alreadyExpired) > 0 {
+		fmt.Printf("=== Ya caducaron y deberías deshacerte de ellos ===\n")
+		for _, food := range foods {
+			if food.When.Before(today) {
+				fmt.Printf("\t* %s\n", food)
+			}
+		}
 	}
 }

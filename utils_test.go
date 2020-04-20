@@ -339,3 +339,38 @@ func Test_foodByExpiricyDays_Less(t *testing.T) {
 		}
 	}
 }
+
+func Test_alreadyExpired(t *testing.T) {
+	type test struct {
+		foods []Food
+		date  time.Time
+		want  []Food
+	}
+
+	tests := []test{
+		test{
+			foods: []Food{
+				Food{Name: "a", Qty: 1, When: time.Date(2020, 11, 10, 0, 0, 0, 0, time.UTC)},
+				Food{Name: "b", Qty: 2, When: time.Date(2020, 11, 11, 0, 0, 0, 0, time.UTC)},
+				Food{Name: "c", Qty: 1, When: time.Date(2020, 11, 12, 0, 0, 0, 0, time.UTC)},
+				Food{Name: "d", Qty: 1, When: time.Date(2020, 11, 13, 0, 0, 0, 0, time.UTC)},
+				Food{Name: "e", Qty: 1, When: time.Date(2020, 11, 14, 0, 0, 0, 0, time.UTC)},
+				Food{Name: "f", Qty: 1, When: time.Date(2020, 11, 15, 0, 0, 0, 0, time.UTC)},
+			},
+			date: time.Date(2020, 11, 14, 0, 0, 0, 0, time.UTC),
+			want: []Food{
+				Food{Name: "a", Qty: 1, When: time.Date(2020, 11, 10, 0, 0, 0, 0, time.UTC)},
+				Food{Name: "b", Qty: 2, When: time.Date(2020, 11, 11, 0, 0, 0, 0, time.UTC)},
+				Food{Name: "c", Qty: 1, When: time.Date(2020, 11, 12, 0, 0, 0, 0, time.UTC)},
+				Food{Name: "d", Qty: 1, When: time.Date(2020, 11, 13, 0, 0, 0, 0, time.UTC)},
+			},
+		},
+	}
+
+	for _, tt := range tests {
+		got := alreadyExpired(&tt.foods, tt.date)
+		if !equal(got, tt.want) {
+			t.Errorf("got=[%s], want=[%s]", got, tt.want)
+		}
+	}
+}
