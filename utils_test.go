@@ -67,8 +67,7 @@ func Test_daysBetween(t *testing.T) {
 	}
 
 	for _, tt := range tests {
-		got := daysBetween(tt.a, tt.b)
-		if got != tt.want {
+		if got := daysBetween(tt.a, tt.b); got != tt.want {
 			t.Errorf("got=[%d], want=[%d]", got, tt.want)
 		}
 	}
@@ -100,7 +99,6 @@ func Test_extractFoodFromText(t *testing.T) {
 		want       Food
 	}
 
-	// FoodName, Qty, When
 	tests := []test{
 		test{
 			text:       "Frijoles, 1, 2020-05-23",
@@ -218,9 +216,43 @@ func Test_equal(t *testing.T) {
 	}
 
 	for _, tt := range tests {
-		got := equal(tt.a, tt.b)
-		if got != tt.areEqual {
+		if got := equal(tt.a, tt.b); got != tt.areEqual {
 			t.Errorf("got=[%t], want=[%t]", got, tt.areEqual)
+		}
+	}
+}
+
+func Test_filterFoodsByMinDays(t *testing.T) {
+	type test struct {
+		foods   []Food
+		today   time.Time
+		minDays int
+		want    []Food
+	}
+
+	tests := []test{
+		test{
+			foods: []Food{
+				Food{Name: "a", Qty: 1, When: time.Date(2020, 11, 10, 0, 0, 0, 0, time.UTC)},
+				Food{Name: "b", Qty: 2, When: time.Date(2020, 11, 11, 0, 0, 0, 0, time.UTC)},
+				Food{Name: "c", Qty: 1, When: time.Date(2020, 11, 12, 0, 0, 0, 0, time.UTC)},
+				Food{Name: "d", Qty: 1, When: time.Date(2020, 11, 13, 0, 0, 0, 0, time.UTC)},
+				Food{Name: "e", Qty: 1, When: time.Date(2020, 11, 13, 0, 0, 0, 0, time.UTC)},
+			},
+			today:   time.Date(2020, 11, 4, 0, 0, 0, 0, time.UTC),
+			minDays: 8,
+			want: []Food{
+				Food{Name: "a", Qty: 1, When: time.Date(2020, 11, 10, 0, 0, 0, 0, time.UTC)},
+				Food{Name: "b", Qty: 2, When: time.Date(2020, 11, 11, 0, 0, 0, 0, time.UTC)},
+				Food{Name: "c", Qty: 1, When: time.Date(2020, 11, 12, 0, 0, 0, 0, time.UTC)},
+			},
+		},
+	}
+
+	for _, tt := range tests {
+		got := filterFoodsByMinDays(&tt.foods, tt.minDays, tt.today)
+		if !equal(got, tt.want) {
+			t.Errorf("got=[%s], want=[%s]", got, tt.want)
 		}
 	}
 }

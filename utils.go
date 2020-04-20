@@ -84,3 +84,30 @@ func equal(a, b []Food) bool {
 	}
 	return true
 }
+
+func filterFoodsByMinDays(foods *[]Food, minDays int, today time.Time) []Food {
+	filteredFoods := make([]Food, 0)
+	for _, f := range *foods {
+		if daysBetween := daysBetween(today, f.When); daysBetween <= minDays {
+			filteredFoods = append(filteredFoods, f)
+		}
+	}
+	return filteredFoods
+}
+
+// Len ...
+func (foods foodByExpiricyDays) Len() int {
+	return len(foods)
+}
+
+// Swap ...
+func (foods foodByExpiricyDays) Swap(i, j int) {
+	foods[i], foods[j] = foods[j], foods[i]
+}
+
+// Less ...
+func (foods foodByExpiricyDays) Less(i, j int) bool {
+	food1 := foods[i]
+	food2 := foods[j]
+	return food1.When.Before(food2.When)
+}

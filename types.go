@@ -13,3 +13,5 @@ type Food struct {
 type ExpirationFormatter interface {
 	Format() string
 }
+
+type foodByExpiricyDays []Food
