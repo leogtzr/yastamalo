@@ -24,4 +24,4 @@ cover:
 	go tool cover -html=cp.out
 
 run:
-	./"${BIN_FILE}"
+	./"${BIN_FILE}" -db ~/inputs/foods.db

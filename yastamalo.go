@@ -29,11 +29,12 @@ func main() {
 
 	today := time.Now()
 	filteredFoods := filterFoodsByMinDays(&foods, minDaysToAlertUserForExpiry, today)
-
-	sort.Sort(foodByExpiricyDays(filteredFoods))
-	fmt.Printf("=== Ya van a caducarrrrrr ===\n")
-	for _, food := range filteredFoods {
-		fmt.Printf("\t* %s\n", food)
+	if len(filteredFoods) > 0 {
+		sort.Sort(foodByExpiricyDays(filteredFoods))
+		fmt.Printf("=== Ya van a caducarrrrrr ===\n")
+		for _, food := range filteredFoods {
+			fmt.Printf("\t* %s\n", food)
+		}
 	}
 
 	alreadyExpired := alreadyExpired(&foods, today)
