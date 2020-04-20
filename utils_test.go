@@ -256,3 +256,86 @@ func Test_filterFoodsByMinDays(t *testing.T) {
 		}
 	}
 }
+
+func Test_foodByExpiricyDays_Len(t *testing.T) {
+	type test struct {
+		foods foodByExpiricyDays
+		want  int
+	}
+
+	tests := []test{
+		test{
+			foods: []Food{
+				Food{Name: "a", Qty: 1, When: time.Date(2020, 11, 10, 0, 0, 0, 0, time.UTC)},
+				Food{Name: "b", Qty: 2, When: time.Date(2020, 11, 11, 0, 0, 0, 0, time.UTC)},
+				Food{Name: "c", Qty: 1, When: time.Date(2020, 11, 12, 0, 0, 0, 0, time.UTC)},
+			},
+			want: 3,
+		},
+	}
+
+	for _, tt := range tests {
+		if len := tt.foods.Len(); len != tt.want {
+			t.Errorf("got=[%d], want=[%d]", len, tt.want)
+		}
+	}
+}
+
+func Test_foodByExpiricyDays_Swap(t *testing.T) {
+	type test struct {
+		foods, want foodByExpiricyDays
+	}
+
+	tests := []test{
+		test{
+			foods: []Food{
+				Food{Name: "a", Qty: 1, When: time.Date(2020, 11, 10, 0, 0, 0, 0, time.UTC)},
+				Food{Name: "b", Qty: 2, When: time.Date(2020, 11, 11, 0, 0, 0, 0, time.UTC)},
+				Food{Name: "c", Qty: 1, When: time.Date(2020, 11, 12, 0, 0, 0, 0, time.UTC)},
+			},
+			want: []Food{
+				Food{Name: "b", Qty: 2, When: time.Date(2020, 11, 11, 0, 0, 0, 0, time.UTC)},
+				Food{Name: "a", Qty: 1, When: time.Date(2020, 11, 10, 0, 0, 0, 0, time.UTC)},
+				Food{Name: "c", Qty: 1, When: time.Date(2020, 11, 12, 0, 0, 0, 0, time.UTC)},
+			},
+		},
+	}
+
+	for _, tt := range tests {
+		tt.foods.Swap(0, 1)
+		if !equal(tt.foods, tt.want) {
+			t.Errorf("got=[%s], want=[%s]", tt.foods, tt.want)
+		}
+	}
+}
+
+func Test_foodByExpiricyDays_Less(t *testing.T) {
+	type test struct {
+		foods        foodByExpiricyDays
+		shouldBeLess bool
+	}
+
+	tests := []test{
+		test{
+			foods: []Food{
+				Food{Name: "a", Qty: 1, When: time.Date(2020, 11, 10, 0, 0, 0, 0, time.UTC)},
+				Food{Name: "b", Qty: 2, When: time.Date(2020, 11, 11, 0, 0, 0, 0, time.UTC)},
+			},
+			shouldBeLess: true,
+		},
+
+		test{
+			foods: []Food{
+				Food{Name: "a", Qty: 1, When: time.Date(2020, 11, 10, 0, 0, 0, 0, time.UTC)},
+				Food{Name: "b", Qty: 2, When: time.Date(2020, 11, 10, 0, 0, 0, 0, time.UTC)},
+			},
+			shouldBeLess: false,
+		},
+	}
+
+	for _, tt := range tests {
+		if got := tt.foods.Less(0, 1); got != tt.shouldBeLess {
+			t.Errorf("got=[%t], want=[%t]", got, tt.shouldBeLess)
+		}
+	}
+}
