@@ -250,8 +250,7 @@ func Test_filterFoodsByMinDays(t *testing.T) {
 	}
 
 	for _, tt := range tests {
-		got := filterFoodsByMinDays(&tt.foods, tt.minDays, tt.today)
-		if !equal(got, tt.want) {
+		if got := filterFoodsByMinDays(&tt.foods, tt.minDays, tt.today); !equal(got, tt.want) {
 			t.Errorf("got=[%s], want=[%s]", got, tt.want)
 		}
 	}
@@ -368,8 +367,7 @@ func Test_alreadyExpired(t *testing.T) {
 	}
 
 	for _, tt := range tests {
-		got := alreadyExpired(&tt.foods, tt.date)
-		if !equal(got, tt.want) {
+		if got := alreadyExpired(&tt.foods, tt.date); !equal(got, tt.want) {
 			t.Errorf("got=[%s], want=[%s]", got, tt.want)
 		}
 	}
