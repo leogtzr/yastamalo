@@ -25,8 +25,13 @@ func TestFood_String(t *testing.T) {
 		},
 
 		test{
-			food: Food{Name: "Frijoles", Qty: 1, When: time.Now().AddDate(0, 0, 3)},
-			want: "Frijoles (1) caduca en 3 días",
+			food: Food{Name: "Frijoles", Qty: 1, When: time.Now().AddDate(0, 0, 4)},
+			want: "Frijoles (1) caduca en 4 días",
+		},
+
+		test{
+			food: Food{Name: "Molida", Qty: 1, When: time.Now().AddDate(0, 0, -2)},
+			want: "Molida (1) caducó hace 2 días",
 		},
 	}
 

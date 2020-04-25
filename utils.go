@@ -18,6 +18,9 @@ func (f Food) String() string {
 	if daysBetweenNowAndFoodExpiry == 1 {
 		return fmt.Sprintf("%s (%d) caduca mañana", f.Name, f.Qty)
 	}
+	if f.When.Before(now) {
+		return fmt.Sprintf("%s (%d) caducó hace %d días", f.Name, f.Qty, daysBetweenNowAndFoodExpiry)
+	}
 	return fmt.Sprintf("%s (%d) caduca en %d días", f.Name, f.Qty, daysBetweenNowAndFoodExpiry)
 }
 
@@ -88,6 +91,11 @@ func equal(a, b []Food) bool {
 func filterFoodsByMinDays(foods *[]Food, minDays int, today time.Time) []Food {
 	filteredFoods := make([]Food, 0)
 	for _, f := range *foods {
+
+		if f.When.Before(today) {
+			continue
+		}
+
 		if daysBetween := daysBetween(today, f.When); daysBetween <= minDays {
 			filteredFoods = append(filteredFoods, f)
 		}
