@@ -9,6 +9,16 @@ import (
 )
 
 func main() {
+
+	config, err := readConfig("yastamalo.env", os.Getenv("HOME"), map[string]interface{}{
+		"minDaysToAlertUserForExpiry": 7,
+		"maxDaysToShowInExpiredFoods": 5,
+	})
+
+	if err != nil { // Handle errors reading the config file
+		panic(fmt.Errorf("fatal error config file: %s", err))
+	}
+
 	dbFile := flag.String("db", "", "db file")
 	flag.Parse()
 
@@ -28,7 +38,7 @@ func main() {
 	}
 
 	today := time.Now()
-	filteredFoods := filterFoodsByMinDays(&foods, minDaysToAlertUserForExpiry, today)
+	filteredFoods := filterFoodsByMinDays(&foods, config.GetInt("minDaysToAlertUserForExpiry"), today)
 	if len(filteredFoods) > 0 {
 		sort.Sort(foodByExpiricyDays(filteredFoods))
 		fmt.Printf("=== Ya van a caducarrrrrr ===\n")
